@@ -1,3 +1,4 @@
+from typing import Counter
 import requests
 from bs4 import BeautifulSoup
 import csv
@@ -39,5 +40,28 @@ def clean(input, countries):
                 writer.writerow(colValues)
     os.rename(tmpFile, input)
 
-countries = getCountries()
-clean('Data/country_population.csv', countries)
+#countries = getCountries()
+#clean('Data/country_population.csv', countries)
+
+def reorgCSV(input):
+    tempFile = "temp.csv"
+    with open(input) as file, open(tempFile, "w") as temp:
+        reader = csv.reader(file, delimiter=',')
+        writer = csv.writer(temp, delimiter=',')
+        
+        colNames = next(reader)
+        colNames.pop(0)
+        
+        for row in reader:
+            colvals = []
+            colvals.append(row[0])
+            country = row[0]
+            row.pop(0)
+            for col, year in zip(row, colNames):
+                colvals.append(year)
+                colvals.append(col)
+                writer.writerow(colvals)
+                colvals = [country]
+    os.rename(tempFile, input)
+
+reorgCSV('Data/life_expectancy.csv')
