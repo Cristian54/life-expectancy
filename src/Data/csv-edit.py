@@ -1,6 +1,5 @@
-from typing import Counter
-import requests
-from bs4 import BeautifulSoup
+#import requests
+#from bs4 import BeautifulSoup
 import csv
 import os
 
@@ -64,4 +63,25 @@ def reorgCSV(input):
                 colvals = [country]
     os.rename(tempFile, input)
 
-reorgCSV('Data/life_expectancy.csv')
+#reorgCSV('Data/life_expectancy.csv')
+
+def addIDCol(input):
+    tempFile = "temp.csv"
+    with open(input) as file, open(tempFile, "w") as temp:
+        reader = csv.reader(file, delimiter=',')
+        writer = csv.writer(temp, delimiter=',')
+        
+        headers = ['dummyID']
+        csvHeaders = next(reader)
+        for h in csvHeaders: headers.append(h)
+        writer.writerow(headers)
+        
+        id = 0
+        for row in reader: 
+            colVals = [id]
+            for ele in row: colVals.append(ele)
+            writer.writerow(colVals)
+            id += 1
+        os.rename(tempFile, input)
+
+addIDCol('Data/life_expectancy.csv')

@@ -8,5 +8,9 @@
     <li><a href="{% url 'country' %}">Country</a></li>
   {% block sidebar %}<!-- insert default navigation text for every page -->{% endblock %}
   {% block content %}<!-- default content text (typically empty) -->{% endblock %}
+
+  {% for entry in ex %}
+    <li>{{entry.CountryNamePop}} || {{entry.Population}} || {{entry.Year}}</li>
+  {% endfor %}
 </body>
 </html>
