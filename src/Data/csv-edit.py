@@ -1,5 +1,5 @@
-#import requests
-#from bs4 import BeautifulSoup
+import requests
+from bs4 import BeautifulSoup
 import csv
 import os
 
@@ -35,12 +35,14 @@ def clean(input, countries):
             colValues = []
             if row[0] in countries: 
                 for col in row:
-                    colValues.append(col.capitalize())
+                    colValues.append(col)
                 writer.writerow(colValues)
     os.rename(tmpFile, input)
 
-#countries = getCountries()
-#clean('Data/country_population.csv', countries)
+""" countries = getCountries()
+countries.append('Puerto Rico')
+countries.append('Venezuela, RB')
+clean('Data/country_population.csv', countries) """
 
 def reorgCSV(input):
     tempFile = "temp.csv"
@@ -63,7 +65,7 @@ def reorgCSV(input):
                 colvals = [country]
     os.rename(tempFile, input)
 
-#reorgCSV('Data/life_expectancy.csv')
+#reorgCSV('Data/country_population.csv')
 
 def addIDCol(input):
     tempFile = "temp.csv"
@@ -84,4 +86,4 @@ def addIDCol(input):
             id += 1
         os.rename(tempFile, input)
 
-addIDCol('Data/life_expectancy.csv')
+addIDCol('Data/country_population.csv')
