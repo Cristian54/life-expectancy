@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'countries.apps.CountriesConfig',
     'django.contrib.humanize',
+    "django_tables2",
 ]
 
 MIDDLEWARE = [
