@@ -10,7 +10,7 @@ def home(request):
 
 def country(request):
     if request.method == 'GET':
-        config = RequestConfig(request)
+        config = RequestConfig(request, paginate=False)
         USA_Data = CountriesData.objects.values('Year', 'Population', 'LifeEx').filter(Country='United States of America')
         table = OneCountryTable(USA_Data)
         config.configure(table)
