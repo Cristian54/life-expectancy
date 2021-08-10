@@ -1,7 +1,8 @@
 from django.shortcuts import render
+from django_tables2 import RequestConfig
 from .models import CountriesData
 from .tables import OneCountryTable
-from django_tables2 import RequestConfig
+from .forms import CountryForm
 
 # Create your views here.
 def home(request):
@@ -14,6 +15,8 @@ def country(request):
         USA_Data = CountriesData.objects.values('Year', 'Population', 'LifeEx').filter(Country='United States of America')
         table = OneCountryTable(USA_Data)
         config.configure(table)
-        return render(request, 'country.html', {'countryData':table, 'country':'United States of America'})
+        
+        form = CountryForm()
+        return render(request, 'country.html', {'countryData':table, 'country':'United States of America', 'form':form})
     #elif request.method == 'POST':
         
