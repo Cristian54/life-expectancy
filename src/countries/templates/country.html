@@ -1,4 +1,5 @@
 {% load render_table from django_tables2 %}
+{% load export_url from django_tables2 %}
 {% load humanize %}
 {% load static %}
 
@@ -21,6 +22,16 @@
     {{ form }}
     <input type="submit" value="Submit">
   </form>
+
+  {% if method == "get" %}
+    <button> <a href="{% export_url 'csv' %}">Download CSV</a> </button>
+  {% elif method == "post" %}
+    <form method="POST">
+      {% csrf_token %}
+      <button name="export-format" type="submit" value="csv">Download CSV</button>
+    </form>
+  {% endif %}
+  
 
   {% render_table countryData %}
 

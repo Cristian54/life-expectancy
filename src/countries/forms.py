@@ -4,8 +4,7 @@ from .models import CountriesData
 
 class CountryForm(forms.Form):
     countries = CountriesData.objects.values('Country').distinct()
-    clist = [c['Country'] for c in countries]
-    numberedList = [(n, c) for (n, c) in zip(range(len(clist)), clist)]
-    ctuple = tuple(numberedList)
+    clist = [(c['Country'], c['Country']) for c in countries]
+    ctuple = tuple(clist)
     
-    country_list = forms.ChoiceField(choices=ctuple, widget=forms.Select)
+    country_list = forms.ChoiceField(choices=ctuple, widget=forms.Select, label="Select a country")
