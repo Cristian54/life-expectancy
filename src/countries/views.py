@@ -11,6 +11,18 @@ def home(request):
     ex = CountriesData.objects.all().filter(Year='1960')
     return render(request, 'home.html', context={'ex':ex})
 
+def country_csv(request): 
+    if request.method == 'POST':
+        config = RequestConfig(request, paginate=False)
+        Country_Data = CountriesData.objects.values('Year', 'Population', 'LifeEx').filter(Country=request.POST['country_list'])
+        table = OneCountryTable(Country_Data)
+        config.configure(table)
+        
+        export_format = 'csv'
+        if TableExport.is_valid_format(export_format):
+            exporter = TableExport(export_format, table)
+            return exporter.response(request.POST['country_list'] + "-Data.{}".format(export_format))
+
 def country(request):
     if request.method == 'GET':
         config = RequestConfig(request, paginate=False)
@@ -25,19 +37,14 @@ def country(request):
             exporter = TableExport(export_format, table)
             return exporter.response("USA-Data.{}".format(export_format))
         
-        return render(request, 'country.html', {'countryData':table, 'country':'United States of America', 'form':form, 'method':"get"})
-    
+        return render(request, 'country.html', {'countryData':table, 'country':'United States of America', 'form':form})
+        
     elif request.method == 'POST':
         config = RequestConfig(request, paginate=False)
         Country_Data = CountriesData.objects.values('Year', 'Population', 'LifeEx').filter(Country=request.POST['country_list'])
         table = OneCountryTable(Country_Data)
         config.configure(table)
         
-        print(request.POST)
-        export_format = request.POST.get("_export", None)
-        if TableExport.is_valid_format(export_format):
-            exporter = TableExport(export_format, table)
-            return exporter.response(request.POST['country_list'] + "-Data.{}".format(export_format))
-        
         form = CountryForm()
-        return render(request, 'country.html', {'countryData':table, 'country':request.POST['country_list'], 'form':form, 'method':"post"})
+        return render(request, 'country.html', {'countryData':table, 'country':request.POST['country_list'], 'form':form})
+    

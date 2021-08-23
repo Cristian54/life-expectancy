@@ -12,9 +12,11 @@ class OneCountryTable(tables.Table):
         initial_sort_descending=True
     )
     Year = tables.Column(initial_sort_descending=True)
+    
     class Meta:
         model = CountriesData 
         template_name = "django_tables2/bootstrap.html"
         fields = ("Year", "Population", "LifeEx")
         attrs = {'class': 'table table-striped table-hover',
                  'id': 'countryTable'}
+        export_formats = ['csv']
