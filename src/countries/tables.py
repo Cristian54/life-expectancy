@@ -18,5 +18,5 @@ class OneCountryTable(tables.Table):
         template_name = "django_tables2/bootstrap.html"
         fields = ("Year", "Population", "LifeEx")
         attrs = {'class': 'table table-striped table-hover',
-                 'id': 'countryTable'}
+                 'border':'2px solid black'}
         export_formats = ['csv']
