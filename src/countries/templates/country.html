@@ -17,17 +17,21 @@
 
   <h3>{{country}}</h3>
 
-  <form action="/country" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Submit">
-  </form>
+
+  <div class="forms">
+
+    <form action="/country" method="post">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" value="Submit">
+    </form>
   
-  
-  <form action="{% url 'country/csv' %}" method="POST" onsubmit="testt()">
-    {% csrf_token %}
-    <button type="submit" name='country_list' value='{{country}}'>Download CSV</button>
-  </form>
+    <form action="{% url 'country/csv' %}" method="POST">
+      {% csrf_token %}
+      <button type="submit" name='country_list' value='{{country}}' class="csv-button">Download CSV</button>
+    </form>
+
+  </div>
 
   {% render_table countryData %}
 
@@ -35,5 +39,45 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   
+  <style>
+    h3 {
+      margin-left: 40px;
+      margin-top: 15px;
+      margin-bottom: 20px;
+    }
+    .forms {
+      display: flex;
+      justify-content: space-between;
+      margin-left: 40px;
+      margin-right: 40px;
+    }
+    input[type="submit"] {
+      margin-top: 10px;
+      background-color: #03516d;
+      color: #fff;
+      border-radius: 10px;
+    }
+    input[type="submit"]:hover {
+      box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+    }
+    .csv-button {
+      color: #fff !important;
+      text-transform: uppercase;
+      text-decoration: none;
+      background: #03516d;
+      padding: 15px;
+      border-radius: 30px;
+      display: inline-block;
+      border: none;
+      transition: all 0.4s ease 0s;
+    }
+    .csv-button:hover {
+      text-shadow: 0px 0px 6px rgba(255, 255, 255, 1);
+      -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+      -moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+      transition: all 0.4s ease 0s;
+    }
+  </style>
+
 </body>
 </html>
