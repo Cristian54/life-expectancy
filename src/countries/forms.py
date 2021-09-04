@@ -8,8 +8,5 @@ class CountryForm(forms.Form):
     clist.insert(0, ('', 'Select a country'))
     ctuple = tuple(clist)
 
-    country_list = forms.ChoiceField(choices=ctuple, label="", required=True,
-                                     widget=forms.Select(attrs={
-                                            'style': 'max-width: 300px;',
-                                            'class':'form-control'
-                                    }))
+    country_list = forms.ChoiceField(choices=ctuple, label="", required=True, 
+                                     widget=forms.Select(attrs={'style': 'max-width: 300px;','class':'form-control'}))

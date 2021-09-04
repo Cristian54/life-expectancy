@@ -6,20 +6,107 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
-  <nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'country' %}">Country</a>
-  </nav>
 
-  <h1>Home page</h1>
-  <!-- <li><a href="{% url 'country' %}">Country</a></li> -->
+  <div class="topnav">
+    <a class="navbar-brand" href="{% url 'country' %}">Single Country Data</a>
+  </div>
 
-  {% for entry in ex %}
-    <li>{{entry.CountryNamePop}} || {{entry.Population}} || {{entry.Year}}</li>
-  {% endfor %}
+  <div class="chart" id="regions_div"> </div>
+
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+
+  google.charts.load('current', {'packages':['geochart', 'corechart']});
+  google.charts.setOnLoadCallback(drawRegionsMap);
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawRegionsMap() {
+    let mapData = JSON.parse("{{countryData|escapejs}}");
+
+    const countryArr = mapData.Country;
+    const popArr = mapData.Population;
+    const leArr = mapData['Life Expectancy']; 
+    
+    let dataArr = [['Country', 'Population', 'Life Expectancy']]
+
+    for(var i = 0; i < countryArr.length; i++) {
+      if(countryArr[i] == 'United States of America') {
+        countryArr[i] = 'United States'
+      }
+      let temp = [countryArr[i], parseInt(popArr[i]), parseInt(leArr[i])]
+      dataArr.push(temp)
+    }
+    
+    /* for(var i = 0; i < dataArr.length; i++){
+      console.log(dataArr[i])
+    } */
+    var data = google.visualization.arrayToDataTable(dataArr); 
+
+    /* var testarr = [
+              ['Country', 'Customer Count', 'Agent Count'],
+              ['Argentina', 999000, 100],
+              ['Australia', 969000, 450],
+              ['Belgium', 12000, 200],
+              ['Brazil', 850000, 250],
+              ['Canada', 1110000, 590],
+              ['China', 3975000, 690],
+              ['Colombia', 4500, 100],
+              ['Denmark', 78600, 150],
+              ['France', 67000, 400],
+              ['Germany', 140000, 550],
+              ['India', 1060000, 560],
+              ['Japan', 60000, 420],
+              ['Nigeria', 1054000, 305],
+              ['Philippines', 120000, 230],
+              ['Russia', 2904000, 180],
+              ['Singapore', 79000, 450],
+              ['South Korea', 15000, 290],
+              ['Switzerland', 35000, 230],
+              ['United Kingdom', 4015000, 750],
+              ['United States', 5000500, 1500],
+    ]
+    var data = google.visualization.arrayToDataTable(testarr);  */
+
+    var options = {
+      colorAxis: {colors: ['#eee8f3', '#ddd1e7','#ccbadc','#bba3d0','#aa8cc5','#9975b9','#885ead', '#7647a2', '#663096', '#551a8b']},
+      legend: 'none',
+    };
+
+    var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+    chart.draw(data, options);
+  }
+
+  $(document).ready(function(){
+    $(window).resize(function(){
+      drawRegionsMap();
+    });
+  });
+
+  </script>
 
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   
+  <style>
+    .topnav {
+      background-color: #333;
+      overflow: hidden;
+    }
+    .topnav a {
+      float: left;
+      color: #f2f2f2;
+      text-align: center;
+      padding: 14px 16px;
+      text-decoration: none;
+      font-size: 17px;
+    }
+    .topnav a:hover {
+      background-color: #ddd;
+      color: black;
+    }
+    .chart {width:100%; height:450px; margin-top: 20px;}
+  </style>
+
 </body>
 </html>

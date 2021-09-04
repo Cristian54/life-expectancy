@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django_tables2 import RequestConfig
 from django_tables2.export.export import TableExport
+import json
 
 from .models import CountriesData
 from .tables import OneCountryTable
@@ -8,8 +9,15 @@ from .forms import CountryForm
 
 # Create your views here.
 def home(request):
-    ex = CountriesData.objects.all().filter(Year='1960')
-    return render(request, 'home.html', context={'ex':ex})
+    YearData = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Year='1960')
+    dataDict = {"Country":[], "Population":[], "Life Expectancy":[]}
+    for y in YearData: 
+        dataDict['Country'].append(y['Country'])
+        dataDict['Population'].append(y['Population'])
+        dataDict['Life Expectancy'].append(y['LifeEx'])
+    
+    jsonData = json.dumps(dataDict)
+    return render(request, 'home.html', {'countryData':jsonData})
 
 def country_csv(request): 
     if request.method == 'POST':
