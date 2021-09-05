@@ -5,20 +5,36 @@ import json
 
 from .models import CountriesData
 from .tables import OneCountryTable
-from .forms import CountryForm
+from .forms import CountryForm, YearForm
 
 # Create your views here.
 def home(request):
-    YearData = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Year='1960')
-    dataDict = {"Country":[], "Population":[], "Life Expectancy":[]}
-    for y in YearData: 
-        dataDict['Country'].append(y['Country'])
-        dataDict['Population'].append(y['Population'])
-        dataDict['Life Expectancy'].append(y['LifeEx'])
+    if request.method == 'GET': 
+        form = YearForm()
+        
+        YearData = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Year='1960')
+        dataDict = {"Country":[], "Population":[], "Life Expectancy":[]}
+        for y in YearData: 
+            dataDict['Country'].append(y['Country'])
+            dataDict['Population'].append(y['Population'])
+            dataDict['Life Expectancy'].append(y['LifeEx'])
+        
+        jsonData = json.dumps(dataDict)
+        return render(request, 'home.html', {'countryData':jsonData, 'year':'1960', 'form':form})
     
-    jsonData = json.dumps(dataDict)
-    return render(request, 'home.html', {'countryData':jsonData})
-
+    elif request.method == 'POST':
+        form = YearForm()
+        
+        YearData = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Year=request.POST['year_list'])
+        dataDict = {"Country":[], "Population":[], "Life Expectancy":[]}
+        for y in YearData: 
+            dataDict['Country'].append(y['Country'])
+            dataDict['Population'].append(y['Population'])
+            dataDict['Life Expectancy'].append(y['LifeEx'])
+        
+        jsonData = json.dumps(dataDict)
+        return render(request, 'home.html', {'countryData':jsonData, 'year':request.POST['year_list'], 'form':form})
+    
 def country_csv(request): 
     if request.method == 'POST':
         config = RequestConfig(request, paginate=False)

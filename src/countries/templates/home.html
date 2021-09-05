@@ -1,14 +1,30 @@
+{% load render_table from django_tables2 %}
+{% load export_url from django_tables2 %}
+{% load humanize %}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   {% block title %}<title>Home page</title>{% endblock %}
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 </head>
 <body>
 
   <div class="topnav">
     <a class="navbar-brand" href="{% url 'country' %}">Single Country Data</a>
+  </div>
+
+  <h2>{{year}}</h2>
+
+  <div class="forms" style="margin-left: 40px;">
+    <form action="{% url 'home' %}" method="post">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" value="Submit">
+    </form>
   </div>
 
   <div class="chart" id="regions_div"> </div>
@@ -68,7 +84,7 @@
     var data = google.visualization.arrayToDataTable(testarr);  */
 
     var options = {
-      colorAxis: {colors: ['#eee8f3', '#ddd1e7','#ccbadc','#bba3d0','#aa8cc5','#9975b9','#885ead', '#7647a2', '#663096', '#551a8b']},
+      colorAxis: {colors: ['#03516d']},
       legend: 'none',
     };
 
@@ -105,7 +121,18 @@
       background-color: #ddd;
       color: black;
     }
-    .chart {width:100%; height:450px; margin-top: 20px;}
+    h2 {
+      margin-left: 40px;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    input[type="submit"] {
+      margin-top: 10px;
+      background-color: #03516d;
+      color: #fff;
+      border-radius: 10px;
+    }
+    .chart {width:100%; height:450px; margin-top: 20px; margin-bottom: 20px;}
   </style>
 
 </body>
