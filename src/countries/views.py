@@ -4,15 +4,19 @@ from django_tables2.export.export import TableExport
 import json
 
 from .models import CountriesData
-from .tables import OneCountryTable
+from .tables import OneCountryTable, OneYearTable
 from .forms import CountryForm, YearForm
 
 # Create your views here.
 def home(request):
     if request.method == 'GET': 
+        config = RequestConfig(request, paginate=False)
+        YearData = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Year='1960')
+        table = OneYearTable(YearData)
+        config.configure(table)
+        
         form = YearForm()
         
-        YearData = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Year='1960')
         dataDict = {"Country":[], "Population":[], "Life Expectancy":[]}
         for y in YearData: 
             dataDict['Country'].append(y['Country'])
@@ -20,9 +24,14 @@ def home(request):
             dataDict['Life Expectancy'].append(y['LifeEx'])
         
         jsonData = json.dumps(dataDict)
-        return render(request, 'home.html', {'countryData':jsonData, 'year':'1960', 'form':form})
+        return render(request, 'home.html', {'countryData':jsonData, 'year':'1960', 'form':form, 'yearTable':table})
     
     elif request.method == 'POST':
+        config = RequestConfig(request, paginate=False)
+        YearData = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Year=request.POST['year_list'])
+        table = OneYearTable(YearData)
+        config.configure(table)
+        
         form = YearForm()
         
         YearData = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Year=request.POST['year_list'])
@@ -33,8 +42,20 @@ def home(request):
             dataDict['Life Expectancy'].append(y['LifeEx'])
         
         jsonData = json.dumps(dataDict)
-        return render(request, 'home.html', {'countryData':jsonData, 'year':request.POST['year_list'], 'form':form})
-    
+        return render(request, 'home.html', {'countryData':jsonData, 'year':request.POST['year_list'], 'form':form, 'yearTable':table})
+
+def year_csv(request): 
+    if request.method == 'POST':
+        config = RequestConfig(request, paginate=False)
+        Year_Data = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Country=request.POST['year'])
+        table = OneYearTable(Year_Data)
+        config.configure(table)
+        
+        export_format = 'csv'
+        if TableExport.is_valid_format(export_format):
+            exporter = TableExport(export_format, table)
+            return exporter.response(request.POST['year'] + "-Data.{}".format(export_format))
+
 def country_csv(request): 
     if request.method == 'POST':
         config = RequestConfig(request, paginate=False)
@@ -55,12 +76,6 @@ def country(request):
         config.configure(table)
         
         form = CountryForm()
-        
-        export_format = request.GET.get("_export", None)
-        if TableExport.is_valid_format(export_format):
-            exporter = TableExport(export_format, table)
-            return exporter.response("USA-Data.{}".format(export_format))
-        
         return render(request, 'country.html', {'countryData':table, 'country':'United States of America', 'form':form})
         
     elif request.method == 'POST':
