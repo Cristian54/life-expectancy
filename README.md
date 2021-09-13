@@ -1,0 +1,1 @@
+Website created with Django that displays population and life expectancy data for numerous countries from the years 1960 to 2016. Data was obtained from this [dataset](https://www.kaggle.com/gemartin/world-bank-data-1960-to-2016) from Kaggle. 
