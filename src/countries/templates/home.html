@@ -35,8 +35,8 @@
     <button type="submit" name='year' value='{{year}}' class="csv-button">Download CSV</button>
   </form>
 
-  <div class="container mt-5">
-    <table id="yearDatatable">
+  <div class="container mt-5" style="margin-bottom: 20px;">
+    <table id="yearDatatable" class="cell-border hover stripe order-column">
       <thead>
       <tr>
           <th>Country</th>
@@ -107,7 +107,15 @@
   <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
   <script>
     $(document).ready(function () {
-        $('#yearDatatable').DataTable();
+        $('#yearDatatable').DataTable({
+          order: [],
+          columnDefs: [{"className": "dt-center", "targets": "_all"}],
+          language: {
+            searchPlaceholder: "Search countries",
+            search: "",
+          },
+          "lengthMenu":[[15, 25, 50, -1], [15, 25, 50, "All"]]
+        });
     });
   </script>
   
