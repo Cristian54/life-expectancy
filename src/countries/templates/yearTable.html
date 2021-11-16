@@ -1,0 +1,31 @@
+{% extends "template/home.html" %}
+
+{% block content %}
+    <table id="yearDatatable">
+        <thead>
+        <tr>
+            <th>Country</th>
+            <th>Population</th>
+            <th>Life Expectancy</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for year in yearData %}
+            <tr>
+                <td>{{year.Country}}</td>
+                <td>{{year.Population}}</td>
+                <td>{{year.LifeEx}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+
+{% block extra_js %}
+    <script>
+        $(document).ready(function () {
+            $('#yearDatatable').DataTable();
+        });
+    </script>
+{% endblock %}

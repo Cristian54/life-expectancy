@@ -9,12 +9,8 @@ from .forms import CountryForm, YearForm
 
 # Create your views here.
 def home(request):
-    if request.method == 'GET': 
-        config = RequestConfig(request, paginate=False)
+    if request.method == 'GET':
         YearData = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Year='1960')
-        table = OneYearTable(YearData)
-        config.configure(table)
-        
         form = YearForm()
         
         dataDict = {"Country":[], "Population":[], "Life Expectancy":[]}
@@ -24,17 +20,12 @@ def home(request):
             dataDict['Life Expectancy'].append(y['LifeEx'])
         
         jsonData = json.dumps(dataDict)
-        return render(request, 'home.html', {'countryData':jsonData, 'year':'1960', 'form':form, 'yearTable':table})
+        return render(request, 'home.html', {'countryData':jsonData, 'year':'1960', 'form':form, 'yearData':YearData})
     
     elif request.method == 'POST':
-        config = RequestConfig(request, paginate=False)
         YearData = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Year=request.POST['year_list'])
-        table = OneYearTable(YearData)
-        config.configure(table)
-        
         form = YearForm()
         
-        YearData = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Year=request.POST['year_list'])
         dataDict = {"Country":[], "Population":[], "Life Expectancy":[]}
         for y in YearData: 
             dataDict['Country'].append(y['Country'])
@@ -42,13 +33,13 @@ def home(request):
             dataDict['Life Expectancy'].append(y['LifeEx'])
         
         jsonData = json.dumps(dataDict)
-        return render(request, 'home.html', {'countryData':jsonData, 'year':request.POST['year_list'], 'form':form, 'yearTable':table})
+        return render(request, 'home.html', {'countryData':jsonData, 'year':request.POST['year_list'], 'form':form, 'yearData':YearData})
 
 def year_csv(request): 
     if request.method == 'POST':
         config = RequestConfig(request, paginate=False)
-        Year_Data = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Country=request.POST['year'])
-        table = OneYearTable(Year_Data)
+        YearData = CountriesData.objects.values('Country', 'Population', 'LifeEx').filter(Year=request.POST['year'])
+        table = OneYearTable(YearData)
         config.configure(table)
         
         export_format = 'csv'
@@ -76,7 +67,7 @@ def country(request):
         config.configure(table)
         
         form = CountryForm()
-        return render(request, 'country.html', {'countryData':table, 'country':'United States of America', 'form':form})
+        return render(request, 'country.html', {'countryData':USA_Data, 'country':'United States of America', 'form':form})
         
     elif request.method == 'POST':
         config = RequestConfig(request, paginate=False)
@@ -85,5 +76,5 @@ def country(request):
         config.configure(table)
         
         form = CountryForm()
-        return render(request, 'country.html', {'countryData':table, 'country':request.POST['country_list'], 'form':form})
+        return render(request, 'country.html', {'countryData':Country_Data, 'country':request.POST['country_list'], 'form':form})
     

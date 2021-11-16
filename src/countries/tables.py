@@ -3,7 +3,7 @@ from .models import CountriesData
 
 class OneYearTable(tables.Table):
     Population = tables.TemplateColumn(
-        template_code="{% load humanize %}{{ value | intword }}",
+        template_code="{% load humanize %}{{ value | intcomma }}",
         initial_sort_descending=True
     )
     LifeEx = tables.TemplateColumn(
@@ -23,8 +23,8 @@ class OneYearTable(tables.Table):
 
 class OneCountryTable(tables.Table):
     Population = tables.TemplateColumn(
-        template_code="{% load humanize %}{{ value | intword }}",
-        initial_sort_descending=True
+        template_code="{% load humanize %}{{ value | intcomma }}",
+        initial_sort_descending=True, 
     )
     LifeEx = tables.TemplateColumn(
         template_code = "{{ value|floatformat:2 }}", 

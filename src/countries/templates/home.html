@@ -10,6 +10,7 @@
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="//cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 </head>
 <body>
 
@@ -34,7 +35,26 @@
     <button type="submit" name='year' value='{{year}}' class="csv-button">Download CSV</button>
   </form>
 
-  {% render_table yearTable %}
+  <div class="container mt-5">
+    <table id="yearDatatable">
+      <thead>
+      <tr>
+          <th>Country</th>
+          <th>Population</th>
+          <th>Life Expectancy</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for year in yearData %}
+          <tr>
+              <td>{{year.Country}}</td>
+              <td>{{year.Population | intcomma}}</td>
+              <td>{{year.LifeEx | floatformat:2}}</td>
+          </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
   <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript">
@@ -83,6 +103,13 @@
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <script src="//cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready(function () {
+        $('#yearDatatable').DataTable();
+    });
+  </script>
   
   <style>
     .topnav {
